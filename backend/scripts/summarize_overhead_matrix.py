@@ -181,7 +181,7 @@ def ext_table(runs: List[Dict[str, Any]], speed: int, speed_name: str) -> str:
         "    }",
         f"    \\caption{{Per-topology breakdown of scheduling and routing makespans at {speed_name} dispensing speed "
         f"($\\tau_\\text{{dispense}}={speed}$), supplementing Table~\\ref{{table:expRouting:cmax_{label}}}. Each entry reports the mean "
-        f"across $n={n}$ runs (five order sets $\\times$ two solver initializations).}}",
+        f"across $n={n}$ runs (five order sets $\\times$ cold and warm scheduler start).}}",
         f"    \\label{{table:expRouting:cmax_{label}_full}}",
         "\\end{table}",
         "",
@@ -219,7 +219,7 @@ def warmup_table(runs: List[Dict[str, Any]]) -> str:
         f"    \\caption{{Impact of constructive warm-start initialization on scheduled makespan ($C_{{\\max}}$) within "
         f"the 300s solver time limit across {len(runs)} runs ($n={n}$ per cell across four topologies and five "
         "generated order sets). $\\Delta$ is the warm-start minus the cold-start makespan; negative values indicate "
-        "makespan reductions achieved by initializing CP Optimizer with the heuristic schedule.}",
+        "makespan reductions achieved by the warm start.}",
         "    \\label{table:expRouting:warmup_comparison}",
         "\\end{table}",
         "",
