@@ -12,6 +12,9 @@ Generated tables:
     routing_cmax_effect_d10_ext.tex, routing_cmax_effect_d1_ext.tex  (per mover count and topology)
     warmup_comparison.tex                                            (cold vs. warm start)
 
+Generated figure data (--figure-dir):
+    movers_cmax_10/<topology>.csv, movers_cmax_1/<topology>.csv      (mean routed C_max per mover count, warm start)
+
 Usage:
     python summarize_overhead_matrix.py --base overhead_matrix_results.csv
     python summarize_overhead_matrix.py --base overhead_matrix_results.csv --reruns rerun_results.csv \
@@ -321,6 +324,19 @@ def variation_table(set_runs: List[Dict[str, Any]], seed_runs: List[Dict[str, An
     ])
 
 
+def mover_count_csvs(runs: List[Dict[str, Any]]) -> Dict[str, str]:
+    """Mean routed C_max over the order sets per topology and mover count, warm start (mover-count figure)."""
+    files = {}
+    for speed, _ in SPEEDS:
+        for layout, name in TOPOLOGIES:
+            lines = ["movers,cmax"]
+            for movers in MOVER_COUNTS:
+                cell = select(runs, speed=speed, movers=movers, layout=layout, warmup=True)
+                lines.append(f"{movers},{round(statistics.mean(r['routed'] for r in cell))}")
+            files[os.path.join(f"movers_cmax_{speed}", f"{name.lower()}.csv")] = "\n".join(lines) + "\n"
+    return files
+
+
 def print_summary(runs: List[Dict[str, Any]]) -> None:
     overheads = [r["overhead_pct"] for r in runs]
     iterations = [r["iterations"] for r in runs]
@@ -347,6 +363,8 @@ def main():
     parser.add_argument("--lower-bound", action="store_true", help="Also write lower_bound_comparison.tex")
     parser.add_argument("--seed-runs", nargs="*", default=None,
                         help="CSV export(s) with additional CP seeds; writes variation_table.tex")
+    parser.add_argument("--figure-dir", default=None,
+                        help="Directory to write the mover-count figure CSVs to (movers_cmax_10/, movers_cmax_1/)")
     parser.add_argument("--seed-order-set", default="orders_set1", help="Order set used for the seed runs")
     args = parser.parse_args()
 
@@ -372,6 +390,14 @@ def main():
             with open(os.path.join(args.output_dir, filename), "w", encoding="utf-8") as f:
                 f.write(content)
         print(f"\nWrote {len(tables)} tables to {args.output_dir}")
+
+    if args.figure_dir:
+        for rel_path, content in mover_count_csvs(runs).items():
+            path = os.path.join(args.figure_dir, rel_path)
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(content)
+        print(f"Wrote mover-count CSVs to {args.figure_dir}")
 
 
 if __name__ == "__main__":
