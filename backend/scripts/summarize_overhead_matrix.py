@@ -177,7 +177,7 @@ def ext_table(runs: List[Dict[str, Any]], speed: int, speed_name: str) -> str:
         "        \\end{tabular}",
         "    }",
         f"    \\caption{{Per-topology breakdown of scheduling and routing makespans at {speed_name} dispensing speed "
-        f"($d={speed}$), supplementing Table~\\ref{{table:expRouting:cmax_{label}}}. Each entry reports the mean "
+        f"($\\tau_\\text{{dispense}}={speed}$), supplementing Table~\\ref{{table:expRouting:cmax_{label}}}. Each entry reports the mean "
         f"across $n={n}$ runs (five order sets $\\times$ two solver initializations).}}",
         f"    \\label{{table:expRouting:cmax_{label}_full}}",
         "\\end{table}",
@@ -203,8 +203,8 @@ def warmup_table(runs: List[Dict[str, Any]]) -> str:
         "        \\begin{tabular}{c|cccc|cccc}",
         "            \\toprule",
         "            \\multirow{2}{*}{\\shortstack{Mover\\\\count}} & ",
-        "            \\multicolumn{4}{c|}{Standard Dispensing Speed ($d=10$)} & ",
-        "            \\multicolumn{4}{c}{Fast Dispensing Speed ($d=1$)} \\\\",
+        "            \\multicolumn{4}{c|}{Standard Dispensing Speed ($\\tau_\\text{dispense}=10$)} & ",
+        "            \\multicolumn{4}{c}{Fast Dispensing Speed ($\\tau_\\text{dispense}=1$)} \\\\",
         "            \\cmidrule(lr){2-5}\\cmidrule(lr){6-9}",
         "            & Cold Start & Warm Start & Difference $\\Delta$ & Change [\\%] & Cold Start & Warm Start & "
         "Difference $\\Delta$ & Change [\\%] \\\\",
